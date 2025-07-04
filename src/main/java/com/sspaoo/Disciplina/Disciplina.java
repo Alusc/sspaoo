@@ -1,10 +1,18 @@
 package com.sspaoo.Disciplina;
 
 public abstract class Disciplina {
-    private String nome;
-    private String codigo;
-    private int cargaHoraria;
-    private int creditos;
+    protected String nome;
+    protected String codigo;
+    protected int cargaHoraria;
+    protected int creditos;
+    protected int precedencia;
+    protected Disciplina[] preRequisitos;
+    
+    public Disciplina(String nome, String codigo, int cargaHoraria){
+        this.nome = nome;
+        this.codigo = codigo;
+        this.cargaHoraria = cargaHoraria;
+    }
 
     public String getNome() {
         return nome;
@@ -20,6 +28,10 @@ public abstract class Disciplina {
 
     public int getCreditos() {
         return creditos;
+    }
+
+    public Disciplina[] getPreRequisitos() {
+        return preRequisitos;
     }
 
 }
