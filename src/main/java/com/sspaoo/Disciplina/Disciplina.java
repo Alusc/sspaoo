@@ -6,7 +6,7 @@ public abstract class Disciplina {
     protected int cargaHoraria;
     protected int creditos;
     protected int precedencia;
-    protected Disciplina[] preRequisitos;
+    // protected Disciplina[] preRequisitos;
     
     public Disciplina(String nome, String codigo, int cargaHoraria){
         this.nome = nome;
@@ -30,8 +30,8 @@ public abstract class Disciplina {
         return creditos;
     }
 
-    public Disciplina[] getPreRequisitos() {
-        return preRequisitos;
-    }
+    // public Disciplina[] getPreRequisitos() {
+    //     return preRequisitos;
+    // }
 
 }
