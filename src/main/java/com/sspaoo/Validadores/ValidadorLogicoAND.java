@@ -14,7 +14,7 @@ public class ValidadorLogicoAND implements ValidadorPreRequisito {
     }
 
     public boolean validar(Aluno aluno, Disciplina disciplina){
-        if (preRequisitos.isEmpty() || preRequisitos == null)
+        if (preRequisitos == null || preRequisitos.isEmpty())
             return true;
         
         for (ValidadorPreRequisito preRequisito: preRequisitos)
