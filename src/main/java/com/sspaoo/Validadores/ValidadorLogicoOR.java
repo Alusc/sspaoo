@@ -6,9 +6,10 @@ import com.sspaoo.Aluno.Aluno;
 import com.sspaoo.Disciplina.Disciplina;
 
 public class ValidadorLogicoOR implements ValidadorPreRequisito {
-    private List<ValidadorPreRequisito> preRequisitos;
+    private List<Disciplina> preRequisitos;
+    private ValidadorSimples validadorSimples = new ValidadorSimples();
 
-    public ValidadorLogicoOR(List<ValidadorPreRequisito> preRequisitos){
+    public ValidadorLogicoOR(List<Disciplina> preRequisitos){
         this.preRequisitos = preRequisitos;
     }
 
@@ -16,8 +17,8 @@ public class ValidadorLogicoOR implements ValidadorPreRequisito {
         if (preRequisitos == null || preRequisitos.isEmpty())
             return true;
         
-        for (ValidadorPreRequisito preRequisito: preRequisitos)
-            if (preRequisito.validar(aluno, disciplina))
+        for (Disciplina preRequisito: preRequisitos)
+            if (validadorSimples.validar(aluno, preRequisito))
                 return true;
 
         return false;

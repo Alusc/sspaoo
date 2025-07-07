@@ -7,9 +7,10 @@ import com.sspaoo.Disciplina.Disciplina;
 
 public class ValidadorLogicoAND implements ValidadorPreRequisito {
     
-    private List<ValidadorPreRequisito> preRequisitos;
+    private List<Disciplina> preRequisitos;
+    private ValidadorSimples validadorSimples = new ValidadorSimples();
 
-    public ValidadorLogicoAND(List<ValidadorPreRequisito> preRequisitos){
+    public ValidadorLogicoAND(List<Disciplina> preRequisitos){
         this.preRequisitos = preRequisitos;
     }
 
@@ -17,8 +18,8 @@ public class ValidadorLogicoAND implements ValidadorPreRequisito {
         if (preRequisitos == null || preRequisitos.isEmpty())
             return true;
         
-        for (ValidadorPreRequisito preRequisito: preRequisitos)
-            if (!preRequisito.validar(aluno, disciplina))
+        for (Disciplina preRequisito: preRequisitos)
+            if (!validadorSimples.validar(aluno, preRequisito))
                 return false;
 
         return true;
