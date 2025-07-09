@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.sspaoo.Disciplina.Disciplina;
+import com.sspaoo.Turma.Turma;
 
 public class Aluno {
     private String nome;
     private String matricula;
     private Map<Disciplina, Float> historico = new HashMap<>();
-    private List<Disciplina> planejamentoFuturo = new ArrayList<>();
+    private List<Turma> planejamentoFuturo = new ArrayList<>();
 
 
     public Aluno(String nome, String matricula){
@@ -28,7 +29,10 @@ public class Aluno {
     public void setMatricula(String matricula) {
         if (matricula == null || matricula.isEmpty())
             throw new IllegalArgumentException("Matrícula não pode ser nula ou vazia");
-        
+        if(matricula.length() != 9)
+            throw new IllegalArgumentException("Matrícula deve conter 9 elementos");
+        if(Integer.parseInt(matricula.substring(0, 3)) > 2025)
+            throw new IllegalArgumentException("Os 4 primeiros elementos da matrícula devem ser um ano válido");
         this.matricula = matricula;
     }
 
@@ -44,7 +48,7 @@ public class Aluno {
         return historico;
     }
 
-    public List<Disciplina> getPlanejamentoFuturo() {
+    public List<Turma> getPlanejamentoFuturo() {
         return planejamentoFuturo;
     }
 
