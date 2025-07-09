@@ -7,11 +7,31 @@ public class Horario {
     private LocalTime[] inicioDaAula = new LocalTime[5];
     private LocalTime[] fimDaAula = new LocalTime[5];
     public Horario(boolean[] temAulaNesseDia, LocalTime[] inicioDaAula, LocalTime[] fimDaAula){
-        if(inicioDaAula.length != fimDaAula.length){
-            throw new blablablaexception ("vetores de tamanhos diferentes");
+        for(int i = 0; i < 5; i++){
+            if(fimDaAula[i].isBefore(inicioDaAula[i])){
+                throw new IllegalArgumentException("A aula precisa começar antes de acabar");
+            }
         }
-        
+    }
+    public boolean getTemAulaNoDia(int dia){
+        if(dia > 5 || dia < 1){
+            throw new IllegalArgumentException("Os dias da semana vão de 1 a 5");
+        }
+        return temAulaNesseDia[dia];
+    }
+    public LocalTime getInicioDaAulaNoDia(int dia){
+        if(dia > 5 || dia < 1){
+            throw new IllegalArgumentException("Os dias da semana vão de 1 a 5");
+        }
+        return inicioDaAula[dia];
+    }
+    public LocalTime getFimDaAulaNoDia(int dia){
+        if(dia > 5 || dia < 1){
+            throw new IllegalArgumentException("Os dias da semana vão de 1 a 5");
+        }
+        return fimDaAula[dia];
     }
 }
+
 
 
