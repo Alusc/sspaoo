@@ -13,6 +13,8 @@ public class Horario {
             }
         }
     }
+    //gets não devem ter parâmetro, mudar o nome/passar pra classe turma
+
     public boolean getTemAulaNoDia(int dia){
         if(dia > 5 || dia < 1){
             throw new IllegalArgumentException("Os dias da semana vão de 1 a 5");
