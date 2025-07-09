@@ -12,8 +12,29 @@ public abstract class Disciplina {
     protected Disciplina coRequisito;
     
     public Disciplina(String nome, String codigo, int cargaHoraria){
+        setNome(nome);
+        setCodigo(codigo);
+        setCargaHoraria(cargaHoraria);
+    }
+
+    public void setNome(String nome) {
+        if (nome == null || nome.isEmpty())
+            throw new IllegalArgumentException("Nome da disciplina não pode ser nulo ou vazio");
+        
         this.nome = nome;
+    }
+
+    public void setCodigo(String codigo) {
+        if (codigo == null || codigo.isEmpty())
+            throw new IllegalArgumentException("Código da disciplina não pode ser nulo ou vazio");
+        
         this.codigo = codigo;
+    }
+
+    public void setCargaHoraria(int cargaHoraria) {
+        if (cargaHoraria <= 0)
+            throw new IllegalArgumentException("A carga horária da disciplina não pode ser menor ou igual a zero");
+
         this.cargaHoraria = cargaHoraria;
     }
 
