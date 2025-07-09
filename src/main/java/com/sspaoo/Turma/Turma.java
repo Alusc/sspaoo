@@ -7,7 +7,7 @@ public class Turma {
     private Disciplina disciplina;
     private int vagas;
     private int alunosMatriculados;
-    private String horario;
+    private Horario horario;
 
     public char getId() {
         return id;
