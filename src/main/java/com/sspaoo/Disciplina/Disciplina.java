@@ -9,7 +9,7 @@ public abstract class Disciplina {
     protected int creditos;
     protected int precedencia;
     protected List<Disciplina> preRequisitos;
-    protected List<Disciplina> coRequisitos;
+    protected Disciplina coRequisito;
     
     public Disciplina(String nome, String codigo, int cargaHoraria){
         this.nome = nome;
@@ -37,8 +37,8 @@ public abstract class Disciplina {
         return preRequisitos;
     }
 
-    public List<Disciplina> getCoRequisitos() {
-        return coRequisitos;
+    public Disciplina getCoRequisito() {
+        return coRequisito;
     }
 
 }

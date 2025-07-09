@@ -1,6 +1,8 @@
 package com.sspaoo.Aluno;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.sspaoo.Disciplina.Disciplina;
@@ -9,6 +11,7 @@ public class Aluno {
     private String nome;
     private String matricula;
     private Map<Disciplina, Float> historico = new HashMap<>();
+    private List<Disciplina> planejamentoFuturo = new ArrayList<>();
 
 
     public Aluno(String nome, String matricula){
@@ -37,8 +40,12 @@ public class Aluno {
         return matricula;
     }
 
-    public Map<Disciplina, Float> getHistorico(){
+    public Map<Disciplina, Float> getHistorico() {
         return historico;
+    }
+
+    public List<Disciplina> getPlanejamentoFuturo() {
+        return planejamentoFuturo;
     }
 
     // public void printarHistorico() {
