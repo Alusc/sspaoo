@@ -1,7 +1,0 @@
-com\sspaoo\TratamentoDeExcecoes\CargaHorariaExcedidaException.class
-com\sspaoo\TratamentoDeExcecoes\ConflictoDeHorarioException.class
-com\sspaoo\TratamentoDeExcecoes\MatriculaException.class
-com\sspaoo\TratamentoDeExcecoes\CoRequisitoNaoAtendidoException.class
-com\sspaoo\TratamentoDeExcecoes\ValidacaoMatriculaException.class
-com\sspaoo\TratamentoDeExcecoes\TurmaCheiaException.class
-com\sspaoo\TratamentoDeExcecoes\GerenciamentoVagasException.class
