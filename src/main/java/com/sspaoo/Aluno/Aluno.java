@@ -51,4 +51,8 @@ public class Aluno {
         return planejamentoFuturo;
     }
 
+    public void adicionarDisciplinaAoHistorico(Disciplina disciplina) {
+        historico.put(disciplina, 0f);
+    }
+
 }

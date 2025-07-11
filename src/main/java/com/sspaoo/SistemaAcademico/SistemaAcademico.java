@@ -2,8 +2,11 @@ package com.sspaoo.SistemaAcademico;
 
 import java.util.Arrays;
 
+import com.sspaoo.Aluno.Aluno;
 import com.sspaoo.Disciplina.*;
 import com.sspaoo.TratamentoDeExcecoes.*;
+import com.sspaoo.Validadores.*;
+import com.sspaoo.Turma.Turma;
 
 public class SistemaAcademico {
     public static void main(String[] args) {
@@ -19,10 +22,25 @@ public class SistemaAcademico {
             System.out.println(preRequisito.getCodigo());
         }
     }
-    public void validaMatricula(){
+
+    public static void realizarMatricula(Aluno aluno, Turma turma) throws MatriculaException {
+        //Esse é o código que vai disparar as exceções
+        Disciplina disciplina = turma.getDisciplina();
+
+        ValidadorLogicoAND validadorAnd = new ValidadorLogicoAND();
+
+        //Exemplo de como as exceções vão ser lançadas
+        if (!validadorAnd.validar(aluno, disciplina))
+            throw new PreRequisitoNaoCumpridoException("Pré requisito não cumprido");
+
+        //Se passar por todas as exceções
+        aluno.adicionarDisciplinaAoHistorico(disciplina);
+    }
+
+    public static void validaMatricula(){
 /*
                 try {
-                    //realizar matricula
+                    //realizarMatricula(Aluno aluno, Turma turma)
                     
  
         } catch (PreRequisitoNaoCumpridoException e) {
@@ -40,5 +58,6 @@ public class SistemaAcademico {
         }
 */
     }
+
 
 }
