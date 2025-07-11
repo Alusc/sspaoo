@@ -1,5 +1,6 @@
 package com.sspaoo.Disciplina;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Disciplina {
@@ -8,7 +9,7 @@ public abstract class Disciplina {
     protected int cargaHoraria;
     protected int creditos;
     protected int precedencia;
-    protected List<Disciplina> preRequisitos;
+    protected List<Disciplina> preRequisitos = new ArrayList<>();
     protected Disciplina coRequisito;
     
     public Disciplina(String nome, String codigo, int cargaHoraria){
@@ -36,6 +37,10 @@ public abstract class Disciplina {
             throw new IllegalArgumentException("A carga horária da disciplina não pode ser menor ou igual a zero");
 
         this.cargaHoraria = cargaHoraria;
+    }
+
+    public void setPreRequisitos(List<Disciplina> preRequisitos) {
+        this.preRequisitos = preRequisitos;
     }
 
     public String getNome() {

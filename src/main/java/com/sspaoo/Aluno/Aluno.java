@@ -14,7 +14,6 @@ public class Aluno {
     private Map<Disciplina, Float> historico = new HashMap<>();
     private List<Turma> planejamentoFuturo = new ArrayList<>();
 
-
     public Aluno(String nome, String matricula){
         setNome(nome);
         setMatricula(matricula);
@@ -52,7 +51,4 @@ public class Aluno {
         return planejamentoFuturo;
     }
 
-    // public void printarHistorico() {
-    //     return;
-    // }
 }
