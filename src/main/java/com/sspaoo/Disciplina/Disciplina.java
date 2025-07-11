@@ -43,6 +43,13 @@ public abstract class Disciplina {
         this.preRequisitos = preRequisitos;
     }
 
+    public void setCoRequisito(Disciplina coRequisito) {
+        if (coRequisito == null)
+            throw new IllegalArgumentException("Co-requisito não pode ser nulo");
+            
+        this.coRequisito = coRequisito;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -65,6 +72,10 @@ public abstract class Disciplina {
 
     public Disciplina getCoRequisito() {
         return coRequisito;
+    }
+    
+    public int getPrecedencia() {
+        return precedencia;
     }
 
 }
