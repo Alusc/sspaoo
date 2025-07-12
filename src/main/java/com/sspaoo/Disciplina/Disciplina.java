@@ -46,7 +46,7 @@ public abstract class Disciplina {
         this.cargaHoraria = cargaHoraria;
     }
 
-    public void setValidadorLogico(TipoPreRequisito tipoPreRequisito) {
+    private void setValidadorLogico(TipoPreRequisito tipoPreRequisito) {
         switch (tipoPreRequisito) {
             case TipoPreRequisito.AND:
                 this.validadorLogico = new ValidadorLogicoAND();
