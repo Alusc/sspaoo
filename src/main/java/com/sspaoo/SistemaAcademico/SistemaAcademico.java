@@ -21,7 +21,7 @@ public class SistemaAcademico {
         Disciplina calculo1 = new DisciplinaObrigatoria("Cálculo I", "MAT154", 4);
         Disciplina geometriaAnalitica = new DisciplinaObrigatoria("Geometria analítica", "MAT155", 4);
         Disciplina calculo2 = new DisciplinaObrigatoria("Cálculo II", "MAT156", 4);
-        calculo2.setPreRequisitos(Arrays.asList(calculo1, geometriaAnalitica));
+        calculo2.setPreRequisitos(Arrays.asList(calculo1, geometriaAnalitica), Disciplina.TipoPreRequisito.AND);
 
 
         Turma algoritmosTurmaB = new Turma(algoritmos, 'B', 100, null);
@@ -59,12 +59,10 @@ public class SistemaAcademico {
         
         Disciplina disciplina = turma.getDisciplina();
 
-        ValidadorLogicoAND validadorAnd = new ValidadorLogicoAND();
+        ValidadorLogico validadorLogico = disciplina.getValidadorLogico();
 
-        //Exemplo de como as exceções vão ser lançadas
-        if (!validadorAnd.validar(aluno, disciplina))
+        if (validadorLogico != null && !validadorLogico.validar(aluno, disciplina))
             throw new PreRequisitoNaoCumpridoException("Pré requisito não cumprido");
-        
             
         ValidadorCoRequisito validadorCoRequisito = new ValidadorCoRequisito();
         if (!validadorCoRequisito.validar(aluno, disciplina))

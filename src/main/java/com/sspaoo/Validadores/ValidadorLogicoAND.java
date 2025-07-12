@@ -5,7 +5,7 @@ import java.util.List;
 import com.sspaoo.Aluno.Aluno;
 import com.sspaoo.Disciplina.Disciplina;
 
-public class ValidadorLogicoAND implements ValidadorPreRequisito {
+public class ValidadorLogicoAND extends ValidadorLogico {
     
     public boolean validar(Aluno aluno, Disciplina disciplina){
         ValidadorSimples validadorSimples = new ValidadorSimples();

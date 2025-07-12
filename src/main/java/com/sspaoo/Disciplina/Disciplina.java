@@ -3,15 +3,22 @@ package com.sspaoo.Disciplina;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sspaoo.Validadores.ValidadorLogico;
+import com.sspaoo.Validadores.ValidadorLogicoAND;
+import com.sspaoo.Validadores.ValidadorLogicoOR;
+
 public abstract class Disciplina {
     protected String nome;
     protected String codigo;
     protected int cargaHoraria;
     protected int creditos;
     protected int precedencia;
+    protected ValidadorLogico validadorLogico;
     protected List<Disciplina> preRequisitos = new ArrayList<>();
     protected Disciplina coRequisito;
     
+    public static enum TipoPreRequisito {AND, OR}  
+
     public Disciplina(String nome, String codigo, int cargaHoraria){
         setNome(nome);
         setCodigo(codigo);
@@ -39,8 +46,22 @@ public abstract class Disciplina {
         this.cargaHoraria = cargaHoraria;
     }
 
-    public void setPreRequisitos(List<Disciplina> preRequisitos) {
+    public void setValidadorLogico(TipoPreRequisito tipoPreRequisito) {
+        switch (tipoPreRequisito) {
+            case TipoPreRequisito.AND:
+                this.validadorLogico = new ValidadorLogicoAND();
+            break;
+        
+            case TipoPreRequisito.OR:
+                this.validadorLogico = new ValidadorLogicoOR();
+                
+            break;
+        }
+    }
+
+    public void setPreRequisitos(List<Disciplina> preRequisitos, TipoPreRequisito tipoPreRequisito) {
         this.preRequisitos = preRequisitos;
+        setValidadorLogico(tipoPreRequisito);
     }
 
     public void setCoRequisito(Disciplina coRequisito) {
@@ -66,6 +87,10 @@ public abstract class Disciplina {
     public int getCreditos() {
         return creditos;
     }
+
+   public ValidadorLogico getValidadorLogico() {
+       return validadorLogico;
+   }
 
     public List<Disciplina> getPreRequisitos() {
         return preRequisitos;
