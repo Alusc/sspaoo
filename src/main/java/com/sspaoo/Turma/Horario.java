@@ -8,29 +8,25 @@ public class Horario {
     private LocalTime[] fimDaAula = new LocalTime[5];
     public Horario(boolean[] temAulaNesseDia, LocalTime[] inicioDaAula, LocalTime[] fimDaAula){
         for(int i = 0; i < 5; i++){
-            if(fimDaAula[i].isBefore(inicioDaAula[i])){
+            if (fimDaAula[i].isBefore(inicioDaAula[i]))
                 throw new IllegalArgumentException("A aula precisa começar antes de acabar");
-            }
         }
     }
     //gets não devem ter parâmetro, mudar o nome/passar pra classe turma
-
+    public void validarPosicao(int dia){
+        if(dia < 0 || dia > 4)
+            throw new IllegalArgumentException("Dia inválido");
+    }
     public boolean getTemAulaNoDia(int dia){
-        if(dia > 5 || dia < 1){
-            throw new IllegalArgumentException("Os dias da semana vão de 1 a 5");
-        }
+        validarPosicao(dia);
         return temAulaNesseDia[dia];
     }
     public LocalTime getInicioDaAulaNoDia(int dia){
-        if(dia > 5 || dia < 1){
-            throw new IllegalArgumentException("Os dias da semana vão de 1 a 5");
-        }
+        validarPosicao(dia);
         return inicioDaAula[dia];
     }
     public LocalTime getFimDaAulaNoDia(int dia){
-        if(dia > 5 || dia < 1){
-            throw new IllegalArgumentException("Os dias da semana vão de 1 a 5");
-        }
+        validarPosicao(dia);
         return fimDaAula[dia];
     }
 }

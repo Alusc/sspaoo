@@ -11,6 +11,7 @@ import com.sspaoo.Turma.Horario;
 import com.sspaoo.Turma.Turma;
 
 public class SistemaAcademico {
+    
     public static void main(String[] args) {
         System.out.println("Sistema");
         //Exemplo de criação de discplinas e pre requisitos
