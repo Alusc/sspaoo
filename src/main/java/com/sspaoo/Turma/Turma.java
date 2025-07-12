@@ -14,7 +14,7 @@ public class Turma {
         setDisciplina(disciplina);
         setId(id);
         setVagas(vagas);
-        setHorario(horario);
+        // setHorario(horario);
     }
 
     public void setDisciplina(Disciplina disciplina) {
@@ -39,6 +39,12 @@ public class Turma {
         if (horario == null)
             throw new IllegalArgumentException("O horário da turma não pode ter um valor nulo");
         this.horario = horario;
+    }
+
+    public void setAlunosMatriculados(int alunosMatriculados) {
+        if (alunosMatriculados < 0)
+            throw new IllegalArgumentException("A quantidade de alunos matriculados tem que ser maior ou igual a zero");
+        this.alunosMatriculados = alunosMatriculados;
     }
 
 
