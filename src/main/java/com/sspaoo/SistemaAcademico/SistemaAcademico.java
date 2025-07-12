@@ -32,15 +32,15 @@ public class SistemaAcademico {
         Turma calculo2TurmaA = new Turma(calculo2, 'A', 100, null);
 
         Aluno aluno1 = new Aluno("Nome", "202500000");
+        aluno1.adicionarDisciplinaAoHistorico(calculo1);
+        aluno1.adicionarDisciplinaAoHistorico(geometriaAnalitica);
+        aluno1.atualizarNotaNoHistorico(calculo1, 60);
+        aluno1.atualizarNotaNoHistorico(geometriaAnalitica, 100);
         aluno1.setPlanejamentoFuturo(Arrays.asList(
             algoritmosTurmaB,
-            calculo1TurmaA, 
-            geometriaAnaliticaTurmaC, 
             calculo2TurmaA
             ));
-
         matricularAluno(aluno1);
-        
     }
 
     public static void matricularAluno(Aluno aluno) {

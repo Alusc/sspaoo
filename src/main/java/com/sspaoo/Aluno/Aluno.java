@@ -70,5 +70,12 @@ public class Aluno {
         cargaHorariaSemanal += disciplina.getCargaHoraria();
     }
 
+    public void atualizarNotaNoHistorico(Disciplina disciplina, float nota){
+        if (!historico.containsKey(disciplina))
+            throw new IllegalArgumentException("A disciplina não está no histórico");
+            
+        historico.put(disciplina, Math.clamp(nota, 0, 100));
+    }
+
 
 }
