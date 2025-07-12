@@ -6,11 +6,11 @@ public class Turma {
     private Disciplina disciplina;
     private char id;
     private int vagas;
-    private int alunosMatriculados;
+    private int alunosMatriculados = 0;
     private Horario horario;
 
+
     public Turma(Disciplina disciplina, char id, int vagas, Horario horario){
-        alunosMatriculados = 0;
         setDisciplina(disciplina);
         setId(id);
         setVagas(vagas);
