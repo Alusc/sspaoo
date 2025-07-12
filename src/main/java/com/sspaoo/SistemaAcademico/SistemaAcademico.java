@@ -11,7 +11,7 @@ import com.sspaoo.Turma.Horario;
 import com.sspaoo.Turma.Turma;
 
 public class SistemaAcademico {
-    
+    private static final int CARGA_HORARIA_MAXIMA = 32;
     public static void main(String[] args) {
         System.out.println("Sistema");
         //Exemplo de criação de discplinas e pre requisitos
@@ -33,8 +33,7 @@ public class SistemaAcademico {
 
         Aluno aluno1 = new Aluno("Nome", "202500000");
         aluno1.setPlanejamentoFuturo(Arrays.asList(
-            algoritmosTurmaB, 
-            algoritmosPraticaTurmaD, 
+            algoritmosTurmaB,
             calculo1TurmaA, 
             geometriaAnaliticaTurmaC, 
             calculo2TurmaA
@@ -45,21 +44,19 @@ public class SistemaAcademico {
     }
 
     public static void matricularAluno(Aluno aluno) {
+        aluno.setCargaHorariaSemanal(0);
         List<Turma> planejamentoFuturo = aluno.getPlanejamentoFuturo();
         if (planejamentoFuturo.isEmpty()){
             System.out.println("O aluno não escolheu nenhuma turma");
             return;
         }
-        for (Turma turma: aluno.getPlanejamentoFuturo()) {
+        for (Turma turma: planejamentoFuturo)
             validarMatricula(aluno, turma);
-        }
     }
 
     public static void realizarMatricula(Aluno aluno, Turma turma) throws MatriculaException {
         //Esse é o código que vai disparar as exceções
-        
         Disciplina disciplina = turma.getDisciplina();
-
         ValidadorLogico validadorLogico = disciplina.getValidadorLogico();
 
         if (validadorLogico != null && !validadorLogico.validar(aluno, disciplina))
@@ -68,10 +65,13 @@ public class SistemaAcademico {
         ValidadorCoRequisito validadorCoRequisito = new ValidadorCoRequisito();
         if (!validadorCoRequisito.validar(aluno, disciplina))
             throw new CoRequisitoNaoAtendidoException("Co-requisito não cumprido");
+        
+        if (aluno.getCargaHorariaSemanal() + disciplina.getCargaHoraria() >= CARGA_HORARIA_MAXIMA)
+            throw new CargaHorariaExcedidaException("Carga horária máxima excedida");
 
         if (turma.isCheia())
             throw new TurmaCheiaException("A turma selecionada não possui vagas disponíveis");
-
+        
         //Se passar por todas as exceções
         turma.setAlunosMatriculados(turma.getAlunosMatriculados() + 1);
         aluno.adicionarDisciplinaAoHistorico(disciplina);
@@ -90,7 +90,7 @@ public class SistemaAcademico {
             System.out.println(alerta + "Falta de co-requisito | ");
         } catch (CargaHorariaExcedidaException e) {
             //se carga horária total (tem que declarar essa variável) > créditos máximos (constante, perguntei pro gleiph quanto é)
-            System.out.println(alerta + "Carga horária excedida | ");
+            System.out.println(alerta + "Carga horária máxima excedida | ");
         } catch (ConflictoDeHorarioException e) {
             //se dois dias que tem aula tem horário de início de uma matéria entre horário de início e fim de outra (lembrar de usar as procedências)
             System.out.println(alerta + "Conflito de horário | ");

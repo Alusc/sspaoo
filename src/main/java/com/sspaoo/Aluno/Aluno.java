@@ -13,6 +13,7 @@ public class Aluno {
     private String matricula;
     private Map<Disciplina, Float> historico = new HashMap<>();
     private List<Turma> planejamentoFuturo = new ArrayList<>();
+    private int cargaHorariaSemanal = 0;
 
     public Aluno(String nome, String matricula){
         setNome(nome);
@@ -39,6 +40,12 @@ public class Aluno {
         this.planejamentoFuturo = planejamentoFuturo;
     }
 
+    public void setCargaHorariaSemanal(int cargaHorariaSemanal) {
+        if (cargaHorariaSemanal < 0)
+            throw new IllegalArgumentException("A carga horaria semanal do aluno tem que ser maior ou igual a zero");
+        this.cargaHorariaSemanal = cargaHorariaSemanal;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -55,8 +62,13 @@ public class Aluno {
         return planejamentoFuturo;
     }
 
+    public int getCargaHorariaSemanal() {
+        return cargaHorariaSemanal;
+    }
     public void adicionarDisciplinaAoHistorico(Disciplina disciplina) {
         historico.put(disciplina, 0f);
+        cargaHorariaSemanal += disciplina.getCargaHoraria();
     }
+
 
 }
