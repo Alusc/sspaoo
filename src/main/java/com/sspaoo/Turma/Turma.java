@@ -47,6 +47,9 @@ public class Turma {
         this.alunosMatriculados = alunosMatriculados;
     }
 
+    public boolean isCheia(){
+        return vagas == alunosMatriculados; 
+    } 
 
     public char getId() {
         return id;

@@ -46,7 +46,8 @@ public abstract class Disciplina {
     public void setCoRequisito(Disciplina coRequisito) {
         if (coRequisito == null)
             throw new IllegalArgumentException("Co-requisito não pode ser nulo");
-            
+        
+        coRequisito.coRequisito = this;
         this.coRequisito = coRequisito;
     }
 

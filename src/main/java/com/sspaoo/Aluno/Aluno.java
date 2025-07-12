@@ -35,6 +35,10 @@ public class Aluno {
         this.matricula = matricula;
     }
 
+    public void setPlanejamentoFuturo(List<Turma> planejamentoFuturo) {
+        this.planejamentoFuturo = planejamentoFuturo;
+    }
+
     public String getNome() {
         return nome;
     }
