@@ -11,7 +11,7 @@ public class ValidadorCoRequisito implements ValidadorPreRequisito {
             return true;
         
         for (Turma turma: aluno.getPlanejamentoFuturo())
-            if (turma.getDisciplina() == coRequisito)
+            if (turma.getDisciplina() == coRequisito && coRequisito.isMatriculado())
                 return true;
         return false;
     }
