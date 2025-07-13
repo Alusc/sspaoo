@@ -41,20 +41,20 @@ public class SistemaAcademico {
         algoritmosPraticaTurmaD.setAlunosMatriculados(100);
         
         Aluno aluno1 = new Aluno("Nome", "202500000");
-        aluno1.adicionarDisciplinaAoHistorico(calculo1);
-        aluno1.adicionarDisciplinaAoHistorico(geometriaAnalitica);
-        aluno1.atualizarNotaNoHistorico(calculo1, 60);
-        aluno1.atualizarNotaNoHistorico(geometriaAnalitica, 100);
-        aluno1.setPlanejamentoFuturo(Arrays.asList(
+
+        
+        for(Turma turma: aluno1.getPlanejamentoFuturo()){
+            aluno1.adicionarDisciplinaAoHistorico(calculo1);
+            aluno1.adicionarDisciplinaAoHistorico(geometriaAnalitica);
+            aluno1.atualizarNotaNoHistorico(calculo1, 60);
+            aluno1.atualizarNotaNoHistorico(geometriaAnalitica, 100);
+            aluno1.setPlanejamentoFuturo(Arrays.asList(
             algoritmosTurmaB,
             algoritmosPraticaTurmaD,
             calculo2TurmaA
             ));
-        mensagemPorTurma.clear();
-        matricularAluno(aluno1);
-        
-        for(Turma turma: aluno1.getPlanejamentoFuturo())
-        {
+            mensagemPorTurma.clear();
+            matricularAluno(aluno1);
             System.out.println(mensagemPorTurma.get(turma));
         }
     }
@@ -73,7 +73,33 @@ public class SistemaAcademico {
                 validarMatricula(aluno, turma.getDisciplina().getCoRequisito().getTurma());
         }
     }
-
+    private static Integer horarioConflita(Aluno aluno, Turma turma){
+        List<Turma> planejamentoFuturo = aluno.getPlanejamentoFuturo();
+        for(Turma turmaJaMatriculada: planejamentoFuturo){
+            Horario horarioJaMatriculado = turmaJaMatriculada.getHorario();
+            Horario horario = turma.getHorario();
+            for(int i = 0; i < 5; i++){
+                if(horario.temAulaNesseDia(i) && horarioJaMatriculado.temAulaNesseDia(i)){
+                    if(horario.fimDaAulaNoDia(i).isAfter(horarioJaMatriculado.inicioDaAulaNoDia(i)) && horario.inicioDaAulaNoDia(i).isBefore(horarioJaMatriculado.fimDaAulaNoDia(i)) ){
+                        Disciplina disciplina = turma.getDisciplina();
+                        Disciplina disciplinaJaMatriculada = turmaJaMatriculada.getDisciplina();
+                        if(disciplina.getPrecedencia() == disciplinaJaMatriculada.getPrecedencia()){
+                            return 1;
+                        }
+                        if(disciplina.getPrecedencia() >= disciplinaJaMatriculada.getPrecedencia()){
+                            return -1;
+                            //remover do map
+                        }
+                        if(disciplina.getPrecedencia() <= disciplinaJaMatriculada.getPrecedencia()){
+                            return 2;
+                        }
+                
+                    }
+                }
+            }
+        }
+        return 0;
+    }
     public static void realizarMatricula(Aluno aluno, Turma turma) throws MatriculaException {
         //Esse é o código que vai disparar as exceções
         Disciplina disciplina = turma.getDisciplina();
@@ -103,7 +129,14 @@ public class SistemaAcademico {
             turma.getDisciplina().setStatus(false);
             throw new TurmaCheiaException("A turma selecionada não possui vagas disponíveis");
         }
-        
+        if(horarioConflita(aluno, turma) == 1){
+            turma.getDisciplina().setStatus(false);
+            throw new ConflictoDeHorarioException("A turma selecionada tem horários conflitando com outra turma de disciplinas de mesma precedência");
+        }
+        if(horarioConflita(aluno, turma) == 2){
+            turma.getDisciplina().setStatus(false);
+
+        }
         //Se passar por todas as exceções
         turma.getDisciplina().setStatus(true);
         turma.setAlunosMatriculados(turma.getAlunosMatriculados() + 1);
