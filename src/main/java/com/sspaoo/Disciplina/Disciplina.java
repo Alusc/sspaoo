@@ -6,6 +6,7 @@ import java.util.List;
 import com.sspaoo.Validadores.ValidadorLogico;
 import com.sspaoo.Validadores.ValidadorLogicoAND;
 import com.sspaoo.Validadores.ValidadorLogicoOR;
+import com.sspaoo.Turma.Turma;
 
 public abstract class Disciplina {
     protected String nome;
@@ -16,6 +17,8 @@ public abstract class Disciplina {
     protected ValidadorLogico validadorLogico;
     protected List<Disciplina> preRequisitos = new ArrayList<>();
     protected Disciplina coRequisito;
+    protected boolean isMatriculado = true;
+    protected Turma turma;
     
     public static enum TipoPreRequisito {AND, OR}  
 
@@ -71,6 +74,11 @@ public abstract class Disciplina {
         coRequisito.coRequisito = this;
         this.coRequisito = coRequisito;
     }
+    
+    public void setTurma(Turma turma)
+    {
+        this.turma = turma;
+    }
 
     public String getNome() {
         return nome;
@@ -103,5 +111,19 @@ public abstract class Disciplina {
     public int getPrecedencia() {
         return precedencia;
     }
-
+    
+    public void setStatus(boolean matriculado)
+    {
+        isMatriculado = matriculado;
+    }
+    
+    public boolean isMatriculado()
+    {
+        return isMatriculado;
+    }
+    
+    public Turma getTurma()
+    {
+        return turma;
+    }
 }
