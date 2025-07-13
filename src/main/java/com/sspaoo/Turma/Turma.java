@@ -14,7 +14,7 @@ public class Turma {
         setDisciplina(disciplina);
         setId(id);
         setVagas(vagas);
-        // setHorario(horario);
+        setHorario(horario);
     }
 
     public void setDisciplina(Disciplina disciplina) {
