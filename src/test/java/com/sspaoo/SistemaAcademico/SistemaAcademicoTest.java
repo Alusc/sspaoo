@@ -44,7 +44,7 @@ class SistemaAcademicoTest {
         turma.setAlunosMatriculados(1); // 1 vaga disponível
         
         assertDoesNotThrow(() -> SistemaAcademico.realizarMatricula(aluno, turma));
-        assertTrue(turma.getDisciplina().isMatriculado());
+        assertTrue(aluno.getHistorico().containsKey(turma.getDisciplina()));
     }
 
     @Test
@@ -55,7 +55,7 @@ class SistemaAcademicoTest {
         Exception exception = assertThrows(PreRequisitoNaoCumpridoException.class,
             () -> SistemaAcademico.realizarMatricula(aluno, turma));
         
-        assertFalse(turma.getDisciplina().isMatriculado());
+        assertFalse(aluno.getHistorico().containsKey(turma.getDisciplina()));
         assertTrue(exception.getMessage().contains("Pré requisito não cumprido"));
     }
 
@@ -66,7 +66,7 @@ class SistemaAcademicoTest {
         Exception exception = assertThrows(CoRequisitoNaoAtendidoException.class,
             () -> SistemaAcademico.realizarMatricula(aluno, turma));
         
-        assertFalse(turma.getDisciplina().isMatriculado());
+        assertFalse(aluno.getHistorico().containsKey(turma.getDisciplina()));
         assertTrue(exception.getMessage().contains("Co-requisito não cumprido"));
     }
 
@@ -77,7 +77,7 @@ class SistemaAcademicoTest {
         Exception exception = assertThrows(TurmaCheiaException.class,
             () -> SistemaAcademico.realizarMatricula(aluno, turma));
         
-        assertFalse(turma.getDisciplina().isMatriculado());
+        assertFalse(aluno.getHistorico().containsKey(turma.getDisciplina()));
         assertTrue(exception.getMessage().contains("não possui vagas disponíveis"));
     }
 
@@ -89,7 +89,7 @@ class SistemaAcademicoTest {
         Exception exception = assertThrows(CargaHorariaExcedidaException.class,
             () -> SistemaAcademico.realizarMatricula(aluno, turma));
         
-        assertFalse(turma.getDisciplina().isMatriculado());
+        assertFalse(aluno.getHistorico().containsKey(turma.getDisciplina()));
         assertTrue(exception.getMessage().contains("Carga horária máxima excedida"));
     }
 
@@ -118,7 +118,7 @@ class SistemaAcademicoTest {
         Exception exception = assertThrows(ConflictoDeHorarioException.class,
             () -> SistemaAcademico.realizarMatricula(aluno, turma1));
         
-        assertFalse(turma1.getDisciplina().isMatriculado());
+        assertFalse(aluno.getHistorico().containsKey(turma1.getDisciplina()));
         assertTrue(exception.getMessage().contains("horários conflitando"));
     }
 
@@ -129,8 +129,8 @@ class SistemaAcademicoTest {
         
         assertDoesNotThrow(() -> SistemaAcademico.matricularAluno(aluno));
         
-        assertTrue(turma.getDisciplina().isMatriculado());
-        assertTrue(turmaCoRequisito.getDisciplina().isMatriculado());
+        assertTrue(aluno.getHistorico().containsKey(turma.getDisciplina()));
+        assertTrue(aluno.getHistorico().containsKey(turmaCoRequisito.getDisciplina()));
     }
 
     @Test
@@ -159,6 +159,6 @@ class SistemaAcademicoTest {
         aluno.setPlanejamentoFuturo(Arrays.asList(turma1, turma2));
         
         assertDoesNotThrow(() -> SistemaAcademico.realizarMatricula(aluno, turma1));
-        assertTrue(turma1.getDisciplina().isMatriculado());
+        assertTrue(aluno.getHistorico().containsKey(turma.getDisciplina()));
     }
 }

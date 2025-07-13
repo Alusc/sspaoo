@@ -6,7 +6,6 @@ import java.util.List;
 import com.sspaoo.Validadores.ValidadorLogico;
 import com.sspaoo.Validadores.ValidadorLogicoAND;
 import com.sspaoo.Validadores.ValidadorLogicoOR;
-import com.sspaoo.Turma.Turma;
 
 public abstract class Disciplina {
     protected String nome;
