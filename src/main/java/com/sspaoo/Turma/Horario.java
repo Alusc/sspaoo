@@ -11,10 +11,23 @@ public class Horario {
             if (fimDaAula[i].isBefore(inicioDaAula[i]))
                 throw new IllegalArgumentException("A aula precisa começar antes de acabar");
         }
+        setTemAulaNesseDia(temAulaNesseDia);
+        setInicioDaAula(inicioDaAula);
+        setFimDaAula(fimDaAula);
+        
     }
     public void validarPosicao(int dia){
         if(dia < 0 || dia > 4)
             throw new IllegalArgumentException("Dia inválido");
+    }
+    public void setTemAulaNesseDia(boolean[] temAulaNesseDia){
+        this.temAulaNesseDia = temAulaNesseDia;
+    }
+    public void setInicioDaAula(LocalTime[] inicioDaAula){
+        this.inicioDaAula = inicioDaAula;
+    }
+    public void setFimDaAula(LocalTime[] fimDaAula){
+        this.fimDaAula = fimDaAula;
     }
     public boolean temAulaNesseDia(int dia){
         validarPosicao(dia);
