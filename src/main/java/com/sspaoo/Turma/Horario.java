@@ -12,22 +12,30 @@ public class Horario {
                 throw new IllegalArgumentException("A aula precisa começar antes de acabar");
         }
     }
-    //gets não devem ter parâmetro, mudar o nome/passar pra classe turma
     public void validarPosicao(int dia){
         if(dia < 0 || dia > 4)
             throw new IllegalArgumentException("Dia inválido");
     }
-    public boolean getTemAulaNoDia(int dia){
+    public boolean temAulaNesseDia(int dia){
         validarPosicao(dia);
         return temAulaNesseDia[dia];
     }
-    public LocalTime getInicioDaAulaNoDia(int dia){
+    public boolean[] getTemAulaNesseDia(){
+        return temAulaNesseDia;
+    }
+    public LocalTime inicioDaAulaNoDia(int dia){
         validarPosicao(dia);
         return inicioDaAula[dia];
     }
-    public LocalTime getFimDaAulaNoDia(int dia){
+    public LocalTime[] getInicioDaAula(){
+        return inicioDaAula;
+    }
+    public LocalTime fimDaAulaNoDia(int dia){
         validarPosicao(dia);
         return fimDaAula[dia];
+    }
+    public LocalTime[] getFimDaAula(){
+        return fimDaAula;
     }
 }
 
