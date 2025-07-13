@@ -23,7 +23,7 @@ public class SistemaAcademico {
         Disciplina algoritmosPratica = new DisciplinaObrigatoria("Algoritmos Prática", "DCC120", 2);
         algoritmos.setCoRequisito(algoritmosPratica);
         
-        Disciplina calculo1 = new DisciplinaObrigatoria("Cálculo I", "MAT154", 4);
+        Disciplina calculo1 = new DisciplinaEletiva("Cálculo I", "MAT154", 4);
         Disciplina geometriaAnalitica = new DisciplinaObrigatoria("Geometria analítica", "MAT155", 4);
         Disciplina calculo2 = new DisciplinaObrigatoria("Cálculo II", "MAT156", 4);
         calculo2.setPreRequisitos(Arrays.asList(calculo1, geometriaAnalitica), Disciplina.TipoPreRequisito.AND);
@@ -109,18 +109,18 @@ public class SistemaAcademico {
             fimAula4
         );
         Turma algoritmosTurmaB = new Turma(algoritmos, 'B', 100, horario1);
-        Turma algoritmosPraticaTurmaD = new Turma(algoritmosPratica, 'D', 100, horario1);
-        Turma calculo1TurmaA = new Turma(calculo1, 'A', 100, horario2);
+        Turma algoritmosPraticaTurmaD = new Turma(algoritmosPratica, 'D', 100, horario2);
+        Turma calculo1TurmaA = new Turma(calculo1, 'A', 100, horario1);
         Turma geometriaAnaliticaTurmaC = new Turma(geometriaAnalitica, 'C', 100, horario3); 
         Turma calculo2TurmaA = new Turma(calculo2, 'A', 100, horario4);
         
         Aluno aluno1 = new Aluno("Nome", "202500000");
 
-        aluno1.setPlanejamentoFuturo(Arrays.asList(
-            calculo1TurmaA,
+        aluno1.setPlanejamentoFuturo(Arrays.asList( 
             algoritmosTurmaB,
-            algoritmosPraticaTurmaD,
             geometriaAnaliticaTurmaC,
+            calculo1TurmaA,
+            algoritmosPraticaTurmaD,
             calculo2TurmaA
         ));
         
@@ -161,6 +161,9 @@ public class SistemaAcademico {
     private static Integer horarioConflita(Aluno aluno, Turma turma){
         List<Turma> planejamentoFuturo = aluno.getPlanejamentoFuturo();
         Horario horario = turma.getHorario();
+        String alertaNaoMatriculado = "Aluno " + aluno.getMatricula() + " não foi matriculado na disciplina ";
+        String alertaMatriculado = "Aluno " + aluno.getMatricula() + " não foi matriculado na disciplina ";
+
         for(Turma turmaJaMatriculada: turmasAprovadas.keySet()){
             Horario horarioJaMatriculado = turmaJaMatriculada.getHorario();
             for(int i = 0; i < 5; i++){
@@ -175,11 +178,16 @@ public class SistemaAcademico {
                         if(disciplina.getPrecedencia() == disciplinaJaMatriculada.getPrecedencia()){
                             return 1;
                         }
-                        if(disciplina.getPrecedencia() >= disciplinaJaMatriculada.getPrecedencia()){
+                        if(disciplina.getPrecedencia() > disciplinaJaMatriculada.getPrecedencia()){
+                            turmasAprovadas.put(turma, alertaMatriculado + turma.getDisciplina().getCodigo() + " turma " + turma.getId());
+                            turmasAprovadas.remove(turmaJaMatriculada);
+                            turmasRejeitadas.put(turmaJaMatriculada, alertaNaoMatriculado + turmaJaMatriculada.getDisciplina().getCodigo() +
+                                    " turma " + turmaJaMatriculada.getId() + " | Motivo: Conflito de horário | ");
                             return -1;
-                            //remover do map
                         }
-                        if(disciplina.getPrecedencia() <= disciplinaJaMatriculada.getPrecedencia()){
+                        if(disciplina.getPrecedencia() < disciplinaJaMatriculada.getPrecedencia()){
+                            turmasRejeitadas.put(turma, alertaNaoMatriculado + turma.getDisciplina().getCodigo() +
+                                    " turma " + turma.getId() +  " | Motivo: Conflito de horário | ");
                             return 2;
                         }
                 
@@ -211,11 +219,12 @@ public class SistemaAcademico {
 
         if(horarioConflita(aluno, turma) == 1)
             throw new ConflictoDeHorarioException("A turma selecionada tem horários conflitando com outra turma de disciplinas de mesma precedência");
-
+        
         //Se passar por todas as exceções
         // turma.setAlunosMatriculados(turma.getAlunosMatriculados() + 1);
         // aluno.adicionarDisciplinaAoHistorico(disciplina);
-        turmasAprovadas.put(turma, "Aluno " + aluno.getMatricula() + " foi matriculado na disciplina " + disciplina.getCodigo() + " turma " + turma.getId() + " com sucesso");
+        if(horarioConflita(aluno, turma) == 0)
+            turmasAprovadas.put(turma, "Aluno " + aluno.getMatricula() + " foi matriculado na disciplina " + disciplina.getCodigo() + " turma " + turma.getId() + " com sucesso");
     }
 
     public static void validarMatricula(Aluno aluno, Turma turma){
