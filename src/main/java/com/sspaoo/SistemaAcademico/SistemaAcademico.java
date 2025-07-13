@@ -109,11 +109,10 @@ public class SistemaAcademico {
             fimAula4
         );
         Turma algoritmosTurmaB = new Turma(algoritmos, 'B', 100, horario1);
-        Turma algoritmosPraticaTurmaD = new Turma(algoritmosPratica, 'D', 100, horario2);
+        Turma algoritmosPraticaTurmaD = new Turma(algoritmosPratica, 'D', 100, horario1);
         Turma calculo1TurmaA = new Turma(calculo1, 'A', 100, horario2);
         Turma geometriaAnaliticaTurmaC = new Turma(geometriaAnalitica, 'C', 100, horario3); 
         Turma calculo2TurmaA = new Turma(calculo2, 'A', 100, horario4);
-        algoritmosPraticaTurmaD.setAlunosMatriculados(100);
         
         Aluno aluno1 = new Aluno("Nome", "202500000");
 
@@ -121,6 +120,7 @@ public class SistemaAcademico {
             calculo1TurmaA,
             algoritmosTurmaB,
             algoritmosPraticaTurmaD,
+            geometriaAnaliticaTurmaC,
             calculo2TurmaA
         ));
         
@@ -161,13 +161,17 @@ public class SistemaAcademico {
     private static Integer horarioConflita(Aluno aluno, Turma turma){
         List<Turma> planejamentoFuturo = aluno.getPlanejamentoFuturo();
         Horario horario = turma.getHorario();
-        for(Turma turmaJaMatriculada: planejamentoFuturo){
+        for(Turma turmaJaMatriculada: turmasAprovadas.keySet()){
             Horario horarioJaMatriculado = turmaJaMatriculada.getHorario();
             for(int i = 0; i < 5; i++){
                 if(horario.temAulaNesseDia(i) && horarioJaMatriculado.temAulaNesseDia(i)){
                     if(horario.fimDaAulaNoDia(i).isAfter(horarioJaMatriculado.inicioDaAulaNoDia(i)) && horario.inicioDaAulaNoDia(i).isBefore(horarioJaMatriculado.fimDaAulaNoDia(i)) ){
                         Disciplina disciplina = turma.getDisciplina();
                         Disciplina disciplinaJaMatriculada = turmaJaMatriculada.getDisciplina();
+                        if(disciplina == disciplinaJaMatriculada)
+                        {
+                            continue;
+                        }
                         if(disciplina.getPrecedencia() == disciplinaJaMatriculada.getPrecedencia()){
                             return 1;
                         }
