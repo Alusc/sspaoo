@@ -1,107 +1,164 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */
 package com.sspaoo.SistemaAcademico;
 
-iimport com.sspaoo.Aluno.Aluno;
-import com.sspaoo.Turma.Turma;
-mport org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-/**
- *
- * @author lukas
- */
-public class SistemaAcademicoTest {
-    
-    public SistemaAcademicoTest() {
-    }
-    @org.junit.jupiter.api.BeforeAll
-    public static void setUpClass() throws Exception {
-    }
+import java.time.LocalTime;
+import java.util.Arrays;
 
-    @org.junit.jupiter.api.AfterAll
-    public static void tearDownClass() throws Exception {
-    }
+import com.sspaoo.Aluno.Aluno;
+import com.sspaoo.Disciplina.DisciplinaObrigatoria;
+import com.sspaoo.Turma.Horario;
+import com.sspaoo.Turma.Turma;
+import com.sspaoo.TratamentoDeExcecoes.*;
 
-    @org.junit.jupiter.api.BeforeEach
-    public void setUp() throws Exception {
-    }
+class SistemaAcademicoTest {
 
-    @org.junit.jupiter.api.AfterEach
-    public void tearDown() throws Exception {
-    }
+    private Aluno aluno;
+    private DisciplinaObrigatoria disciplina;
+    private Turma turma;
+    private DisciplinaObrigatoria disciplinaCoRequisito;
+    private Turma turmaCoRequisito;
 
-    
-    @BeforeAll
-    public static void setUpClass() {
-    }
-    
-    @AfterAll
-    public static void tearDownClass() {
-    }
-    
     @BeforeEach
-    public void setUp() {
-    }
-    
-    @AfterEach
-    public v    }
-
-    /**
-     * Test of main method, of class SistemaAcademico.
-     */
-    @org.junit.jupiter.api.Test
-    public void testMain() {
-        System.out.println("main");
-        String[] args = null;
-        SistemaAcademico.main(args);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void setUp() {
+        aluno = new Aluno("João Silva", "202500001");
+        disciplina = new DisciplinaObrigatoria("Algoritmos I", "DCC119", 4);
+        
+        boolean[] diasSemAula = new boolean[5];
+        LocalTime[] iniciosVazios = new LocalTime[5];
+        LocalTime[] finsVazios = new LocalTime[5];
+        Horario horarioVazio = new Horario(diasSemAula, iniciosVazios, finsVazios);
+        
+        turma = new Turma(disciplina, 'A', 2, horarioVazio);
+        
+        disciplinaCoRequisito = new DisciplinaObrigatoria("Algoritmos Prática", "DCC120", 2);
+        turmaCoRequisito = new Turma(disciplinaCoRequisito, 'B', 2, horarioVazio);
+        disciplina.setCoRequisito(disciplinaCoRequisito);
     }
 
-    /**
-     * Test of matricularAluno method, of class SistemaAcademico.
-     */
-    @org.junit.jupiter.api.Test
-    public void testMatricularAluno() {
-        System.out.println("matricularAluno");
-        Aluno aluno = null;
-        SistemaAcademico.matricularAluno(aluno);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    @Test
+    void testMatriculaBemSucedida() {
+        aluno.setCargaHorariaSemanal(10);
+        turma.setAlunosMatriculados(1); // 1 vaga disponível
+        
+        assertDoesNotThrow(() -> SistemaAcademico.realizarMatricula(aluno, turma));
+        assertTrue(turma.getDisciplina().isMatriculado());
     }
 
-    /**
-     * Test of realizarMatricula method, of class SistemaAcademico.
-     */
-    @org.junit.jupiter.api.Test
-    public void testRealizarMatricula() throws Exception {
-        System.out.println("realizarMatricula");
-        Aluno aluno = null;
-        Turma turma = null;
-        SistemaAcademico.realizarMatricula(aluno, turma);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    @Test
+    void testPreRequisitoNaoCumpridoException() {
+        DisciplinaObrigatoria preRequisito = new DisciplinaObrigatoria("Pré-requisito", "PRE001", 4);
+        disciplina.setPreRequisitos(Arrays.asList(preRequisito), DisciplinaObrigatoria.TipoPreRequisito.AND);
+        
+        Exception exception = assertThrows(PreRequisitoNaoCumpridoException.class,
+            () -> SistemaAcademico.realizarMatricula(aluno, turma));
+        
+        assertFalse(turma.getDisciplina().isMatriculado());
+        assertTrue(exception.getMessage().contains("Pré requisito não cumprido"));
     }
 
-    /**
-     * Test of validarMatricula method, of class SistemaAcademico.
-     */
-    @org.junit.jupiter.api.Test
-    public void testValidarMatricula() {
-        System.out.println("validarMatricula");
-        Aluno aluno = null;
-        Turma turma = null;
-        SistemaAcademico.validarMatricula(aluno, turma);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-oid tearDown() {
+    @Test
+    void testCoRequisitoNaoAtendidoException() {
+        aluno.setPlanejamentoFuturo(Arrays.asList(turma)); // Apenas a disciplina principal
+        
+        Exception exception = assertThrows(CoRequisitoNaoAtendidoException.class,
+            () -> SistemaAcademico.realizarMatricula(aluno, turma));
+        
+        assertFalse(turma.getDisciplina().isMatriculado());
+        assertTrue(exception.getMessage().contains("Co-requisito não cumprido"));
     }
-    
+
+    @Test
+    void testTurmaCheiaException() {
+        turma.setAlunosMatriculados(2); // Todas as vagas ocupadas
+        
+        Exception exception = assertThrows(TurmaCheiaException.class,
+            () -> SistemaAcademico.realizarMatricula(aluno, turma));
+        
+        assertFalse(turma.getDisciplina().isMatriculado());
+        assertTrue(exception.getMessage().contains("não possui vagas disponíveis"));
+    }
+
+    @Test
+    void testCargaHorariaExcedidaException() {
+        aluno.setCargaHorariaSemanal(30); // Limite é 32
+        disciplina.setCargaHoraria(4); // 30 + 4 = 34 > 32
+        
+        Exception exception = assertThrows(CargaHorariaExcedidaException.class,
+            () -> SistemaAcademico.realizarMatricula(aluno, turma));
+        
+        assertFalse(turma.getDisciplina().isMatriculado());
+        assertTrue(exception.getMessage().contains("Carga horária máxima excedida"));
+    }
+
+    @Test
+    void testConflitoHorario() {
+        boolean[] diasAula = new boolean[5];
+        LocalTime[] inicios = new LocalTime[5];
+        LocalTime[] fins = new LocalTime[5];
+        
+        diasAula[0] = true;
+        inicios[0] = LocalTime.of(8, 0);
+        fins[0] = LocalTime.of(10, 0);
+        
+        Horario horario1 = new Horario(diasAula.clone(), inicios.clone(), fins.clone());
+        
+        inicios[0] = LocalTime.of(9, 0);
+        fins[0] = LocalTime.of(11, 0);
+        Horario horario2 = new Horario(diasAula.clone(), inicios.clone(), fins.clone());
+        
+        Turma turma1 = new Turma(disciplina, 'A', 2, horario1);
+        DisciplinaObrigatoria disciplina2 = new DisciplinaObrigatoria("Cálculo I", "MAT101", 4);
+        Turma turma2 = new Turma(disciplina2, 'B', 2, horario2);
+        
+        aluno.setPlanejamentoFuturo(Arrays.asList(turma1, turma2));
+        
+        Exception exception = assertThrows(ConflictoDeHorarioException.class,
+            () -> SistemaAcademico.realizarMatricula(aluno, turma1));
+        
+        assertFalse(turma1.getDisciplina().isMatriculado());
+        assertTrue(exception.getMessage().contains("horários conflitando"));
+    }
+
+    @Test
+    void testMatricularAlunoComCoRequisito() {
+        aluno.setPlanejamentoFuturo(Arrays.asList(turma, turmaCoRequisito));
+        aluno.setCargaHorariaSemanal(10);
+        
+        assertDoesNotThrow(() -> SistemaAcademico.matricularAluno(aluno));
+        
+        assertTrue(turma.getDisciplina().isMatriculado());
+        assertTrue(turmaCoRequisito.getDisciplina().isMatriculado());
+    }
+
+    @Test
+    void testHorarioSemConflito() {
+        boolean[] diasAula = new boolean[5];
+        LocalTime[] inicios = new LocalTime[5];
+        LocalTime[] fins = new LocalTime[5];
+        
+        diasAula[0] = true;
+        inicios[0] = LocalTime.of(8, 0);
+        fins[0] = LocalTime.of(10, 0);
+        Horario horario1 = new Horario(diasAula.clone(), inicios.clone(), fins.clone());
+        
+        boolean[] diasAula2 = new boolean[5];
+        LocalTime[] inicios2 = new LocalTime[5];
+        LocalTime[] fins2 = new LocalTime[5];
+        diasAula2[1] = true;
+        inicios2[1] = LocalTime.of(9, 0);
+        fins2[1] = LocalTime.of(11, 0);
+        Horario horario2 = new Horario(diasAula2.clone(), inicios2.clone(), fins2.clone());
+        
+        Turma turma1 = new Turma(disciplina, 'A', 2, horario1);
+        DisciplinaObrigatoria disciplina2 = new DisciplinaObrigatoria("Cálculo I", "MAT101", 4);
+        Turma turma2 = new Turma(disciplina2, 'B', 2, horario2);
+        
+        aluno.setPlanejamentoFuturo(Arrays.asList(turma1, turma2));
+        
+        assertDoesNotThrow(() -> SistemaAcademico.realizarMatricula(aluno, turma1));
+        assertTrue(turma1.getDisciplina().isMatriculado());
+    }
 }
