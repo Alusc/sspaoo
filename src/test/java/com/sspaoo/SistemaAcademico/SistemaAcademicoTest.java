@@ -8,7 +8,9 @@ import java.time.LocalTime;
 import java.util.Arrays;
 
 import com.sspaoo.Aluno.Aluno;
+import com.sspaoo.Disciplina.DisciplinaEletiva;
 import com.sspaoo.Disciplina.DisciplinaObrigatoria;
+import com.sspaoo.Disciplina.DisciplinaOptativa;
 import com.sspaoo.Turma.Horario;
 import com.sspaoo.Turma.Turma;
 import com.sspaoo.TratamentoDeExcecoes.*;
@@ -98,6 +100,66 @@ class SistemaAcademicoTest {
     }
 
     @Test
+    void testPreRequisitoNaoCumpridoExceptionAND() {
+        DisciplinaObrigatoria preRequisito1 = new DisciplinaObrigatoria("Pré-requisito", "PRE001", 4);
+        DisciplinaObrigatoria preRequisito2 = new DisciplinaObrigatoria("Pré-requisito", "PRE001", 4);
+        
+
+        DisciplinaObrigatoria disciplinaTeste = new DisciplinaObrigatoria("Null", "ABC", 5);
+        Turma turmaTeste = new Turma(disciplinaTeste, 'A', 10, horarioTeste);
+        
+        disciplinaTeste.setPreRequisitos(Arrays.asList(preRequisito1, preRequisito2), DisciplinaObrigatoria.TipoPreRequisito.AND);
+        
+        aluno.adicionarDisciplinaAoHistorico(preRequisito1);
+        aluno.atualizarNotaNoHistorico(preRequisito1, 60);
+
+        Exception exception = assertThrows(PreRequisitoNaoCumpridoException.class,
+            () -> SistemaAcademico.realizarMatricula(aluno, turmaTeste));
+        
+        assertFalse(aluno.getHistorico().containsKey(turmaTeste.getDisciplina()));
+        assertTrue(exception.getMessage().contains("Pré requisito não cumprido"));
+    }
+
+    @Test
+    void testPreRequisitoNaoCumpridoExceptionOR() {
+        DisciplinaObrigatoria preRequisito1 = new DisciplinaObrigatoria("Pré-requisito", "PRE001", 4);
+        DisciplinaObrigatoria preRequisito2 = new DisciplinaObrigatoria("Pré-requisito", "PRE001", 4);
+        
+
+        DisciplinaObrigatoria disciplinaTeste = new DisciplinaObrigatoria("Null", "ABC", 5);
+        Turma turmaTeste = new Turma(disciplinaTeste, 'A', 10, horarioTeste);
+        
+        disciplinaTeste.setPreRequisitos(Arrays.asList(preRequisito1, preRequisito2), DisciplinaObrigatoria.TipoPreRequisito.OR);
+
+        Exception exception = assertThrows(PreRequisitoNaoCumpridoException.class,
+            () -> SistemaAcademico.realizarMatricula(aluno, turmaTeste));
+        
+        assertFalse(aluno.getHistorico().containsKey(turmaTeste.getDisciplina()));
+        assertTrue(exception.getMessage().contains("Pré requisito não cumprido"));
+    }
+
+    @Test
+    void testPreRequisitoNaoCumpridoExceptionNota() {
+        DisciplinaObrigatoria preRequisito1 = new DisciplinaObrigatoria("Pré-requisito", "PRE001", 4);
+
+        DisciplinaObrigatoria disciplinaTeste = new DisciplinaObrigatoria("Null", "ABC", 5);
+        Turma turmaTeste = new Turma(disciplinaTeste, 'A', 10, horarioTeste);
+        
+        disciplinaTeste.setPreRequisitos(Arrays.asList(preRequisito1), DisciplinaObrigatoria.TipoPreRequisito.AND);
+        
+        aluno.adicionarDisciplinaAoHistorico(preRequisito1);
+        aluno.atualizarNotaNoHistorico(preRequisito1, 59);
+
+        Exception exception = assertThrows(PreRequisitoNaoCumpridoException.class,
+            () -> SistemaAcademico.realizarMatricula(aluno, turmaTeste));
+        
+        assertFalse(aluno.getHistorico().containsKey(turmaTeste.getDisciplina()));
+        assertTrue(exception.getMessage().contains("Pré requisito não cumprido"));
+    }
+
+
+
+    @Test
     void testCoRequisitoNaoAtendidoException() {
         aluno.setPlanejamentoFuturo(Arrays.asList(turma)); // Apenas a disciplina principal
         
@@ -168,5 +230,67 @@ class SistemaAcademicoTest {
 
         assertFalse(aluno.getHistorico().containsKey(turmaTeste.getDisciplina()));
         assertTrue(exception.getMessage().contains("horários conflitando"));
+    }
+
+    @Test
+    void testConflitoHorarioPrecedenciaEletiva() {
+
+        DisciplinaEletiva disciplinaTeste = new DisciplinaEletiva("Null", "ABC", 4);// 30 + 4 = 34 > 32
+        
+
+        boolean[] diasAula = new boolean[5];
+        LocalTime[] inicios = new LocalTime[5];
+        LocalTime[] fins = new LocalTime[5];
+        
+        diasAula[0] = true;
+        inicios[0] = LocalTime.of(8, 0);
+        fins[0] = LocalTime.of(10, 0);
+        
+        Horario horario1 = new Horario(diasAula.clone(), inicios.clone(), fins.clone());
+        
+        inicios[0] = LocalTime.of(9, 0);
+        fins[0] = LocalTime.of(11, 0);
+        Horario horario2 = new Horario(diasAula.clone(), inicios.clone(), fins.clone());
+        
+        Turma turmaTeste = new Turma(disciplinaTeste, 'A', 10, horario1);
+        DisciplinaObrigatoria disciplina2 = new DisciplinaObrigatoria("Cálculo I", "MAT101", 4);
+        Turma turma2 = new Turma(disciplina2, 'B', 2, horario2);
+        
+        aluno.setPlanejamentoFuturo(Arrays.asList(turmaTeste, turma2));
+        
+        assertDoesNotThrow(() -> SistemaAcademico.matricularAluno(aluno));
+
+        assertTrue(aluno.getHistorico().containsKey(turma2.getDisciplina()));
+        assertFalse(aluno.getHistorico().containsKey(turmaTeste.getDisciplina()));
+    }
+
+    @Test
+    void testConflitoHorarioPrecedenciaOptativa() {
+        DisciplinaEletiva disciplinaTeste = new DisciplinaEletiva("Null", "ABC", 4);// 30 + 4 = 34 > 32
+        
+        boolean[] diasAula = new boolean[5];
+        LocalTime[] inicios = new LocalTime[5];
+        LocalTime[] fins = new LocalTime[5];
+        
+        diasAula[0] = true;
+        inicios[0] = LocalTime.of(8, 0);
+        fins[0] = LocalTime.of(10, 0);
+        
+        Horario horario1 = new Horario(diasAula.clone(), inicios.clone(), fins.clone());
+        
+        inicios[0] = LocalTime.of(9, 0);
+        fins[0] = LocalTime.of(11, 0);
+        Horario horario2 = new Horario(diasAula.clone(), inicios.clone(), fins.clone());
+        
+        Turma turmaTeste = new Turma(disciplinaTeste, 'A', 10, horario1);
+        DisciplinaOptativa disciplina2 = new DisciplinaOptativa("Cálculo I", "MAT101", 4);
+        Turma turma2 = new Turma(disciplina2, 'B', 2, horario2);
+        
+        aluno.setPlanejamentoFuturo(Arrays.asList(turmaTeste, turma2));
+        
+        assertDoesNotThrow(() -> SistemaAcademico.matricularAluno(aluno));
+
+        assertFalse(aluno.getHistorico().containsKey(turma2.getDisciplina()));
+        assertTrue(aluno.getHistorico().containsKey(turmaTeste.getDisciplina()));
     }
 }
