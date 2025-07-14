@@ -90,14 +90,14 @@ public class SistemaAcademico {
             fimAula3
         );
 
-        java.time.LocalTime[] inicioAula4 = {
-            java.time.LocalTime.of(0, 0),
-            java.time.LocalTime.of(0, 0),
-            java.time.LocalTime.of(0, 0),
-            java.time.LocalTime.of(13, 0), // quinta
-            java.time.LocalTime.of(15, 0)  // sexta
+        LocalTime[] inicioAula4 = {
+            LocalTime.of(0, 0),
+            LocalTime.of(0, 0),
+            LocalTime.of(0, 0),
+            LocalTime.of(13, 0), // quinta
+            LocalTime.of(15, 0)  // sexta
         };
-        java.time.LocalTime[] fimAula4 = {
+        LocalTime[] fimAula4 = {
             java.time.LocalTime.of(0, 0),
             java.time.LocalTime.of(0, 0),
             java.time.LocalTime.of(0, 0),
@@ -112,14 +112,12 @@ public class SistemaAcademico {
         Turma algoritmosTurmaB = new Turma(algoritmos, 'B', 100, horario1);
         Turma algoritmosPraticaTurmaD = new Turma(algoritmosPratica, 'D', 100, horario2);
         Turma calculo1TurmaA = new Turma(calculo1, 'A', 100, horario1);
-        Turma geometriaAnaliticaTurmaC = new Turma(geometriaAnalitica, 'C', 100, horario3); 
         Turma calculo2TurmaA = new Turma(calculo2, 'A', 100, horario4);
         
         Aluno aluno1 = new Aluno("Nome", "202500000");
 
         aluno1.setPlanejamentoFuturo(Arrays.asList( 
             algoritmosTurmaB,
-            geometriaAnaliticaTurmaC,
             calculo1TurmaA,
             algoritmosPraticaTurmaD,
             calculo2TurmaA
@@ -164,7 +162,7 @@ public class SistemaAcademico {
     private static Integer horarioConflita(Aluno aluno, Turma turma){
         Horario horario = turma.getHorario();
         String alertaNaoMatriculado = "Aluno " + aluno.getMatricula() + " não foi matriculado na disciplina ";
-        String alertaMatriculado = "Aluno " + aluno.getMatricula() + " não foi matriculado na disciplina ";
+        String alertaMatriculado = "Aluno " + aluno.getMatricula() + " foi matriculado na disciplina ";
 
         for(Turma turmaJaMatriculada: aluno.getPlanejamentoFuturo()){
             Horario horarioJaMatriculado = turmaJaMatriculada.getHorario();
@@ -181,7 +179,7 @@ public class SistemaAcademico {
                             return 1;
                         }
                         if(disciplina.getPrecedencia() > disciplinaJaMatriculada.getPrecedencia()){
-                            turmasAprovadas.put(turma, alertaMatriculado + turma.getDisciplina().getCodigo() + " turma " + turma.getId());
+                            turmasAprovadas.put(turma, alertaMatriculado + turma.getDisciplina().getCodigo() + " turma " + turma.getId() + " com sucesso");
                             turmasAprovadas.remove(turmaJaMatriculada);
                             turmasRejeitadas.put(turmaJaMatriculada, alertaNaoMatriculado + turmaJaMatriculada.getDisciplina().getCodigo() +
                                     " turma " + turmaJaMatriculada.getId() + " | Motivo: Conflito de horário | ");

@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.sspaoo.SistemaAcademico.SistemaAcademicoTest
 -------------------------------------------------------------------------------
-Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.219 s -- in com.sspaoo.SistemaAcademico.SistemaAcademicoTest
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.255 s -- in com.sspaoo.SistemaAcademico.SistemaAcademicoTest
