@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.time.*;
 
 import com.sspaoo.Aluno.Aluno;
 import com.sspaoo.Disciplina.*;
@@ -29,19 +30,19 @@ public class SistemaAcademico {
         calculo2.setPreRequisitos(Arrays.asList(calculo1, geometriaAnalitica), Disciplina.TipoPreRequisito.AND);
 
        // Exemplos de horários diferentes com início e fim de aula
-        java.time.LocalTime[] inicioAula1 = {
-            java.time.LocalTime.of(8, 0), // segunda
-            java.time.LocalTime.of(0, 0),                         
-            java.time.LocalTime.of(0, 0),                        
-            java.time.LocalTime.of(0, 0),                         
-            java.time.LocalTime.of(10, 0) // sexta
+        LocalTime[] inicioAula1 = {
+            LocalTime.of(8, 0), // segunda
+            LocalTime.of(0, 0),                         
+            LocalTime.of(0, 0),                        
+            LocalTime.of(0, 0),                         
+            LocalTime.of(10, 0) // sexta
         };
-        java.time.LocalTime[] fimAula1 = {
-            java.time.LocalTime.of(10, 0), // segunda
-            java.time.LocalTime.of(0, 0),                          
-            java.time.LocalTime.of(0, 0),                          
-            java.time.LocalTime.of(0, 0),                         
-            java.time.LocalTime.of(12, 0)  // sexta
+        LocalTime[] fimAula1 = {
+            LocalTime.of(10, 0), // segunda
+            LocalTime.of(0, 0),                          
+            LocalTime.of(0, 0),                          
+            LocalTime.of(0, 0),                         
+            LocalTime.of(12, 0)  // sexta
         };
         Horario horario1 = new Horario(
             new boolean[]{true, false, false, false, true},
@@ -49,19 +50,19 @@ public class SistemaAcademico {
             fimAula1
         );
 
-        java.time.LocalTime[] inicioAula2 = {
-            java.time.LocalTime.of(0, 0),
-            java.time.LocalTime.of(14, 0), // terça
-            java.time.LocalTime.of(16, 0), // quarta
-            java.time.LocalTime.of(0, 0),
-            java.time.LocalTime.of(0, 0),
+        LocalTime[] inicioAula2 = {
+            LocalTime.of(0, 0),
+            LocalTime.of(14, 0), // terça
+            LocalTime.of(16, 0), // quarta
+            LocalTime.of(0, 0),
+            LocalTime.of(0, 0),
         };
-        java.time.LocalTime[] fimAula2 = {
-            java.time.LocalTime.of(0, 0),
-            java.time.LocalTime.of(16, 0), // terça
-            java.time.LocalTime.of(18, 0), // quarta
-            java.time.LocalTime.of(0, 0),
-            java.time.LocalTime.of(0, 0),
+        LocalTime[] fimAula2 = {
+            LocalTime.of(0, 0),
+            LocalTime.of(16, 0), // terça
+            LocalTime.of(18, 0), // quarta
+            LocalTime.of(0, 0),
+            LocalTime.of(0, 0),
         };
         Horario horario2 = new Horario(
             new boolean[]{false, true, true, false, false},
@@ -69,15 +70,15 @@ public class SistemaAcademico {
             fimAula2
         );
 
-        java.time.LocalTime[] inicioAula3 = {
-            java.time.LocalTime.of(8, 0), // segunda
-            java.time.LocalTime.of(10, 0), // terça
-            java.time.LocalTime.of(0, 0),
-            java.time.LocalTime.of(0, 0),
-            java.time.LocalTime.of(0, 0)
+        LocalTime[] inicioAula3 = {
+            LocalTime.of(8, 0), // segunda
+            LocalTime.of(10, 0), // terça
+            LocalTime.of(0, 0),
+            LocalTime.of(0, 0),
+            LocalTime.of(0, 0)
         };
-        java.time.LocalTime[] fimAula3 = {
-            java.time.LocalTime.of(10, 0), // segunda
+        LocalTime[] fimAula3 = {
+            LocalTime.of(10, 0), // segunda
             java.time.LocalTime.of(12, 0), // terça
             java.time.LocalTime.of(0, 0),
             java.time.LocalTime.of(0, 0),
