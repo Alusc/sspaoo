@@ -4,9 +4,10 @@ import java.time.*;
 
 public class Horario {
     private boolean[] temAulaNesseDia = {false, false, false, false, false};
-    private LocalTime[] inicioDaAula = new LocalTime[5];
-    private LocalTime[] fimDaAula = new LocalTime[5];
+    private LocalTime[] inicioDaAula = {LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0)};
+    private LocalTime[] fimDaAula = {LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0)};
     public Horario(boolean[] temAulaNesseDia, LocalTime[] inicioDaAula, LocalTime[] fimDaAula){
+        System.out.println(fimDaAula);
         for(int i = 0; i < 5; i++){
             if (fimDaAula[i].isBefore(inicioDaAula[i])){
                 throw new IllegalArgumentException("A aula precisa começar antes de acabar");
@@ -14,19 +15,6 @@ public class Horario {
             setInicioDaAula(inicioDaAula);
             setFimDaAula(fimDaAula);
             setTemAulaNesseDia(temAulaNesseDia);
-            if(!temAulaNesseDia[i]){
-                inicioDaAula[i] = LocalTime.of(0, 0);
-                fimDaAula[i] = LocalTime.of(0, 0);
-            }
-            if(temAulaNesseDia[i] && inicioDaAula[i] == null){
-                throw new IllegalArgumentException("Defina quando começa a aula");                
-            }
-            if(temAulaNesseDia[i] && fimDaAula[i] == null){
-                throw new IllegalArgumentException("Defina quando começa a aula");                
-            }
-            if(temAulaNesseDia[i] && inicioDaAula[i] == null){
-                throw new IllegalArgumentException("Defina quando começa a aula");                
-            }
         }
         setInicioDaAula(inicioDaAula);
         setFimDaAula(fimDaAula);
