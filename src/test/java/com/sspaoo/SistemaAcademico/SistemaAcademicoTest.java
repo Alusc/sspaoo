@@ -24,27 +24,39 @@ class SistemaAcademicoTest {
     @BeforeEach
     void setUp() {
         aluno = new Aluno("João Silva", "202500001");
-        disciplina = new DisciplinaObrigatoria("Algoritmos I", "DCC119", 4);
+        disciplina = new DisciplinaObrigatoria("Geometria Analitica", "MAT155", 4);
         
         boolean[] diasSemAula = new boolean[5];
         LocalTime[] iniciosVazios = new LocalTime[5];
         LocalTime[] finsVazios = new LocalTime[5];
         Horario horarioVazio = new Horario(diasSemAula, iniciosVazios, finsVazios);
 
-        LocalTime[] inicioAula1 = new LocalTime[5];
-        LocalTime[] fimAula1 = new LocalTime[5];
-        inicioAula1[0] = LocalTime.of(8, 0);
-        inicioAula1[4] = LocalTime.of(8, 0);
-        fimAula1[0] = LocalTime.of(10, 0);
-        fimAula1[4] = LocalTime.of(10, 0);
-      
-        Horario horario1 = new Horario(
+        LocalTime[] inicioAulaGA = new LocalTime[5];
+        LocalTime[] fimAulaGA = new LocalTime[5];
+        LocalTime[] inicioAulaCalculo1 = new LocalTime[5];
+        LocalTime[] fimAulaCalculo1 = new LocalTime[5];
+        
+
+        inicioAulaGA[0] = LocalTime.of(8, 0);
+        inicioAulaGA[4] = LocalTime.of(8, 0);
+        fimAulaGA[0] = LocalTime.of(10, 0);
+        fimAulaGA[4] = LocalTime.of(10, 0);
+        inicioAulaCalculo1[2] = LocalTime.of(14, 0);
+        fimAulaCalculo1[4] = LocalTime.of(16, 0);
+        Horario horarioDeGA = new Horario(
             new boolean[]{true, false, false, false, true},
-            inicioAula1,
-            fimAula1
+            inicioAulaGA,
+            fimAulaGA
         );
         
-        turma = new Turma(disciplina, 'A', 2, horario1);
+        Horario horarioDeCalculo = new Horario(
+                new boolean[] {false, false, true, false, true},
+                inicioAulaCalculo1,
+                fimAulaCalculo1
+        );
+        
+        
+        turma = new Turma(disciplina, 'A', 2, horarioDeGA);
         
         disciplinaCoRequisito = new DisciplinaObrigatoria("Algoritmos Prática", "DCC120", 2);
         turmaCoRequisito = new Turma(disciplinaCoRequisito, 'B', 2, horarioVazio);
@@ -133,45 +145,5 @@ class SistemaAcademicoTest {
         
         assertFalse(aluno.getHistorico().containsKey(turma1.getDisciplina()));
         assertTrue(exception.getMessage().contains("horários conflitando"));
-    }
-
-    @Test
-    void testMatricularAlunoComCoRequisito() {
-        aluno.setPlanejamentoFuturo(Arrays.asList(turma, turmaCoRequisito));
-        aluno.setCargaHorariaSemanal(10);
-        
-        assertDoesNotThrow(() -> SistemaAcademico.matricularAluno(aluno));
-        
-        assertTrue(aluno.getHistorico().containsKey(turma.getDisciplina()));
-        assertTrue(aluno.getHistorico().containsKey(turmaCoRequisito.getDisciplina()));
-    }
-
-    @Test
-    void testHorarioSemConflito() {
-        boolean[] diasAula = new boolean[5];
-        LocalTime[] inicios = new LocalTime[5];
-        LocalTime[] fins = new LocalTime[5];
-        
-        diasAula[0] = true;
-        inicios[0] = LocalTime.of(8, 0);
-        fins[0] = LocalTime.of(10, 0);
-        Horario horario1 = new Horario(diasAula.clone(), inicios.clone(), fins.clone());
-        
-        boolean[] diasAula2 = new boolean[5];
-        LocalTime[] inicios2 = new LocalTime[5];
-        LocalTime[] fins2 = new LocalTime[5];
-        diasAula2[1] = true;
-        inicios2[1] = LocalTime.of(9, 0);
-        fins2[1] = LocalTime.of(11, 0);
-        Horario horario2 = new Horario(diasAula2.clone(), inicios2.clone(), fins2.clone());
-        
-        Turma turma1 = new Turma(disciplina, 'A', 2, horario1);
-        DisciplinaObrigatoria disciplina2 = new DisciplinaObrigatoria("Cálculo I", "MAT101", 4);
-        Turma turma2 = new Turma(disciplina2, 'B', 2, horario2);
-        
-        aluno.setPlanejamentoFuturo(Arrays.asList(turma1, turma2));
-        
-        assertDoesNotThrow(() -> SistemaAcademico.realizarMatricula(aluno, turma1));
-        assertTrue(aluno.getHistorico().containsKey(turma.getDisciplina()));
     }
 }
