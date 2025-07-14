@@ -148,9 +148,11 @@ public class SistemaAcademico {
             System.out.println(alerta);
 
         System.out.println();
+
         System.out.println("Turmas rejeitadas: ");
         for (String alerta: turmasRejeitadas.values())
             System.out.println(alerta);
+
         System.out.println();
 
         for (Turma turmaMatriculada: turmasAprovadas.keySet()) {
@@ -159,7 +161,6 @@ public class SistemaAcademico {
         }
     }
     private static Integer horarioConflita(Aluno aluno, Turma turma){
-        List<Turma> planejamentoFuturo = aluno.getPlanejamentoFuturo();
         Horario horario = turma.getHorario();
         String alertaNaoMatriculado = "Aluno " + aluno.getMatricula() + " não foi matriculado na disciplina ";
         String alertaMatriculado = "Aluno " + aluno.getMatricula() + " não foi matriculado na disciplina ";
@@ -221,8 +222,6 @@ public class SistemaAcademico {
             throw new ConflictoDeHorarioException("A turma selecionada tem horários conflitando com outra turma de disciplinas de mesma precedência");
         
         //Se passar por todas as exceções
-        // turma.setAlunosMatriculados(turma.getAlunosMatriculados() + 1);
-        // aluno.adicionarDisciplinaAoHistorico(disciplina);
         if(horarioConflita(aluno, turma) == 0)
             turmasAprovadas.put(turma, "Aluno " + aluno.getMatricula() + " foi matriculado na disciplina " + disciplina.getCodigo() + " turma " + turma.getId() + " com sucesso");
     }

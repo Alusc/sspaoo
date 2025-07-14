@@ -30,8 +30,21 @@ class SistemaAcademicoTest {
         LocalTime[] iniciosVazios = new LocalTime[5];
         LocalTime[] finsVazios = new LocalTime[5];
         Horario horarioVazio = new Horario(diasSemAula, iniciosVazios, finsVazios);
+
+        LocalTime[] inicioAula1 = new LocalTime[5];
+        LocalTime[] fimAula1 = new LocalTime[5];
+        inicioAula1[0] = LocalTime.of(8, 0);
+        inicioAula1[4] = LocalTime.of(8, 0);
+        fimAula1[0] = LocalTime.of(10, 0);
+        fimAula1[4] = LocalTime.of(10, 0);
+      
+        Horario horario1 = new Horario(
+            new boolean[]{true, false, false, false, true},
+            inicioAula1,
+            fimAula1
+        );
         
-        turma = new Turma(disciplina, 'A', 2, horarioVazio);
+        turma = new Turma(disciplina, 'A', 2, horario1);
         
         disciplinaCoRequisito = new DisciplinaObrigatoria("Algoritmos Prática", "DCC120", 2);
         turmaCoRequisito = new Turma(disciplinaCoRequisito, 'B', 2, horarioVazio);
