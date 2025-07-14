@@ -7,18 +7,22 @@ public class Horario {
     private LocalTime[] inicioDaAula = {LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0)};
     private LocalTime[] fimDaAula = {LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0)};
     public Horario(boolean[] temAulaNesseDia, LocalTime[] inicioDaAula, LocalTime[] fimDaAula){
-        System.out.println(fimDaAula);
         for(int i = 0; i < 5; i++){
-            if (fimDaAula[i].isBefore(inicioDaAula[i])){
-                throw new IllegalArgumentException("A aula precisa começar antes de acabar");
+            if(temAulaNesseDia[i]) {
+                if(inicioDaAula[i] == null || fimDaAula[i] == null) {
+                    throw new IllegalArgumentException("Defina os horários de início e fim para os dias com aula");
+                }
+                if (fimDaAula[i].isBefore(inicioDaAula[i])){
+                    throw new IllegalArgumentException("A aula precisa começar antes de acabar");
+                }
+            } else {
+                inicioDaAula[i] = LocalTime.of(0, 0);
+                fimDaAula[i] = LocalTime.of(0, 0);
             }
-            setInicioDaAula(inicioDaAula);
-            setFimDaAula(fimDaAula);
-            setTemAulaNesseDia(temAulaNesseDia);
         }
         setInicioDaAula(inicioDaAula);
         setFimDaAula(fimDaAula);
-        
+        setTemAulaNesseDia(temAulaNesseDia);
     }
     public void validarPosicao(int dia){
         if(dia < 0 || dia > 4)
@@ -55,6 +59,7 @@ public class Horario {
         return fimDaAula;
     }
 }
+
 
 
 
