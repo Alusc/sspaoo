@@ -8,14 +8,20 @@ public class Horario {
     private LocalTime[] fimDaAula = new LocalTime[5];
     public Horario(boolean[] temAulaNesseDia, LocalTime[] inicioDaAula, LocalTime[] fimDaAula){
         for(int i = 0; i < 5; i++){
+            setTemAulaNesseDia(temAulaNesseDia);
             if(!temAulaNesseDia[i]){
                 inicioDaAula[i] = LocalTime.of(0, 0);
                 fimDaAula[i] = LocalTime.of(0, 0);
             }
+            if(temAulaNesseDia[i] && inicioDaAula[i] == null){
+                throw new IllegalArgumentException("Defina quando começa a aula");                
+            }
+            if(temAulaNesseDia[i] && fimDaAula[i] == null){
+                throw new IllegalArgumentException("Defina quando começa a aula");                
+            }
             if (fimDaAula[i].isBefore(inicioDaAula[i]))
                 throw new IllegalArgumentException("A aula precisa começar antes de acabar");
         }
-        setTemAulaNesseDia(temAulaNesseDia);
         setInicioDaAula(inicioDaAula);
         setFimDaAula(fimDaAula);
         
