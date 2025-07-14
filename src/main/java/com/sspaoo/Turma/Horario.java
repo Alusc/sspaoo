@@ -3,11 +3,15 @@ package com.sspaoo.Turma;
 import java.time.*;
 
 public class Horario {
-    private boolean[] temAulaNesseDia = new boolean[5];    
+    private boolean[] temAulaNesseDia = {false, false, false, false, false};
     private LocalTime[] inicioDaAula = new LocalTime[5];
     private LocalTime[] fimDaAula = new LocalTime[5];
     public Horario(boolean[] temAulaNesseDia, LocalTime[] inicioDaAula, LocalTime[] fimDaAula){
         for(int i = 0; i < 5; i++){
+            if(!temAulaNesseDia[i]){
+                inicioDaAula[i] = LocalTime.of(0, 0);
+                fimDaAula[i] = LocalTime.of(0, 0);
+            }
             if (fimDaAula[i].isBefore(inicioDaAula[i]))
                 throw new IllegalArgumentException("A aula precisa começar antes de acabar");
         }
