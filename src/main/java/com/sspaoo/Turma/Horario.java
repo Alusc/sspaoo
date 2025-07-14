@@ -4,8 +4,8 @@ import java.time.*;
 
 public class Horario {
     private boolean[] temAulaNesseDia = {false, false, false, false, false};
-    private LocalTime[] inicioDaAula = {LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0)};
-    private LocalTime[] fimDaAula = {LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0), LocalTime.of(0, 0)};
+    private LocalTime[] inicioDaAula = new LocalTime[5];
+    private LocalTime[] fimDaAula = new LocalTime[5];
     public Horario(boolean[] temAulaNesseDia, LocalTime[] inicioDaAula, LocalTime[] fimDaAula){
         for(int i = 0; i < 5; i++){
             if(temAulaNesseDia[i]) {
