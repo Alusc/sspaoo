@@ -20,7 +20,7 @@ class SistemaAcademicoTest {
     private Turma turma;
     private DisciplinaObrigatoria disciplinaCoRequisito;
     private Turma turmaCoRequisito;
-
+    private Horario horarioTeste;
     @BeforeEach
     void setUp() {
         aluno = new Aluno("João Silva", "202500001");
@@ -36,6 +36,8 @@ class SistemaAcademicoTest {
         LocalTime[] inicioAulaCalculo1 = new LocalTime[5];
         LocalTime[] fimAulaCalculo1 = new LocalTime[5];
         
+        
+
 
         inicioAulaGA[0] = LocalTime.of(8, 0);
         inicioAulaGA[4] = LocalTime.of(8, 0);
@@ -48,12 +50,18 @@ class SistemaAcademicoTest {
             inicioAulaGA,
             fimAulaGA
         );
-        
-        Horario horarioDeCalculo = new Horario(
-                new boolean[] {false, false, true, false, true},
-                inicioAulaCalculo1,
-                fimAulaCalculo1
+
+        horarioTeste = new Horario(
+            new boolean[]{true, false, false, false, true},
+            inicioAulaGA,
+            fimAulaGA
         );
+        
+        // Horario horarioDeCalculo = new Horario(
+        //         new boolean[] {false, false, true, false, true},
+        //         inicioAulaCalculo1,
+        //         fimAulaCalculo1
+        // );
         
         
         turma = new Turma(disciplina, 'A', 2, horarioDeGA);
@@ -67,8 +75,13 @@ class SistemaAcademicoTest {
     void testMatriculaBemSucedida() {
         aluno.setCargaHorariaSemanal(10);
         turma.setAlunosMatriculados(1); // 1 vaga disponível
+
+        aluno.setPlanejamentoFuturo(Arrays.asList(
+            turma,
+            turmaCoRequisito
+        ));
         
-        assertDoesNotThrow(() -> SistemaAcademico.realizarMatricula(aluno, turma));
+        assertDoesNotThrow(() -> SistemaAcademico.matricularAluno(aluno));
         assertTrue(aluno.getHistorico().containsKey(turma.getDisciplina()));
     }
 
@@ -97,29 +110,38 @@ class SistemaAcademicoTest {
 
     @Test
     void testTurmaCheiaException() {
-        turma.setAlunosMatriculados(2); // Todas as vagas ocupadas
+        DisciplinaObrigatoria disciplinaTeste = new DisciplinaObrigatoria("Null", "ABC", 5);
+        Turma turmaTeste = new Turma(disciplinaTeste, 'A', 10, horarioTeste);
+        
+        turmaTeste.setAlunosMatriculados(10); // Todas as vagas ocupadas
         
         Exception exception = assertThrows(TurmaCheiaException.class,
-            () -> SistemaAcademico.realizarMatricula(aluno, turma));
+            () -> SistemaAcademico.realizarMatricula(aluno, turmaTeste));
         
-        assertFalse(aluno.getHistorico().containsKey(turma.getDisciplina()));
+        assertFalse(aluno.getHistorico().containsKey(turmaTeste.getDisciplina()));
         assertTrue(exception.getMessage().contains("não possui vagas disponíveis"));
     }
 
     @Test
     void testCargaHorariaExcedidaException() {
         aluno.setCargaHorariaSemanal(30); // Limite é 32
-        disciplina.setCargaHoraria(4); // 30 + 4 = 34 > 32
+        
+        DisciplinaObrigatoria disciplinaTeste = new DisciplinaObrigatoria("Null", "ABC", 4);// 30 + 4 = 34 > 32
+        Turma turmaTeste = new Turma(disciplinaTeste, 'A', 10, horarioTeste);
         
         Exception exception = assertThrows(CargaHorariaExcedidaException.class,
-            () -> SistemaAcademico.realizarMatricula(aluno, turma));
+            () -> SistemaAcademico.realizarMatricula(aluno, turmaTeste));
         
-        assertFalse(aluno.getHistorico().containsKey(turma.getDisciplina()));
+        assertFalse(aluno.getHistorico().containsKey(turmaTeste.getDisciplina()));
         assertTrue(exception.getMessage().contains("Carga horária máxima excedida"));
     }
 
     @Test
     void testConflitoHorario() {
+
+        DisciplinaObrigatoria disciplinaTeste = new DisciplinaObrigatoria("Null", "ABC", 4);// 30 + 4 = 34 > 32
+        
+
         boolean[] diasAula = new boolean[5];
         LocalTime[] inicios = new LocalTime[5];
         LocalTime[] fins = new LocalTime[5];
@@ -134,16 +156,17 @@ class SistemaAcademicoTest {
         fins[0] = LocalTime.of(11, 0);
         Horario horario2 = new Horario(diasAula.clone(), inicios.clone(), fins.clone());
         
-        Turma turma1 = new Turma(disciplina, 'A', 2, horario1);
+        Turma turmaTeste = new Turma(disciplinaTeste, 'A', 10, horario1);
         DisciplinaObrigatoria disciplina2 = new DisciplinaObrigatoria("Cálculo I", "MAT101", 4);
         Turma turma2 = new Turma(disciplina2, 'B', 2, horario2);
         
-        aluno.setPlanejamentoFuturo(Arrays.asList(turma1, turma2));
+        aluno.setPlanejamentoFuturo(Arrays.asList(turmaTeste, turma2));
         
         Exception exception = assertThrows(ConflictoDeHorarioException.class,
-            () -> SistemaAcademico.realizarMatricula(aluno, turma1));
-        
-        assertFalse(aluno.getHistorico().containsKey(turma1.getDisciplina()));
+            () -> SistemaAcademico.realizarMatricula(aluno, turmaTeste));
+
+
+        assertFalse(aluno.getHistorico().containsKey(turmaTeste.getDisciplina()));
         assertTrue(exception.getMessage().contains("horários conflitando"));
     }
 }

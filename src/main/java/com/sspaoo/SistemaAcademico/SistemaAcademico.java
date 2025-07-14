@@ -166,7 +166,7 @@ public class SistemaAcademico {
         String alertaNaoMatriculado = "Aluno " + aluno.getMatricula() + " não foi matriculado na disciplina ";
         String alertaMatriculado = "Aluno " + aluno.getMatricula() + " não foi matriculado na disciplina ";
 
-        for(Turma turmaJaMatriculada: turmasAprovadas.keySet()){
+        for(Turma turmaJaMatriculada: aluno.getPlanejamentoFuturo()){
             Horario horarioJaMatriculado = turmaJaMatriculada.getHorario();
             for(int i = 0; i < 5; i++){
                 if(horario.temAulaNesseDia(i) && horarioJaMatriculado.temAulaNesseDia(i)){
